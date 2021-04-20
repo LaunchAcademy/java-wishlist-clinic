@@ -4,6 +4,7 @@ import java.util.Scanner;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 public class Menu {
 
@@ -61,10 +62,20 @@ public class Menu {
         System.out.println("What is the url?");
         String productUrl = scanner.nextLine();
 
-      // create and persist the product
+        Product newProduct = new Product();
+        newProduct.setName(productName);
+        newProduct.setPrice(productPrice);
+        newProduct.setUrl(productUrl);
+        em.getTransaction().begin();
+        em.persist(newProduct);
+        em.getTransaction().commit();
         System.out.println(newProduct.getId());
       } else if (input == MenuOption.b) {
-      // retrieve a list of all products
+        TypedQuery<Product> query = em.createQuery("select p from Product p order by name", Product.class);
+        List<Product> products = query.getResultList();
+        for (Product product: products){
+          System.out.println(product.getName() + ", " + product.getPrice() + ", " + product.getUrl());
+        }
       }
     } while (input != MenuOption.c);
     em.close();

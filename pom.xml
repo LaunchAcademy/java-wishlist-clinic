@@ -25,7 +25,20 @@
       <version>3.8.1</version>
     </dependency>
   </dependencies>
-
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-maven-plugin</artifactId>
+        <version>5.2.4</version>
+        <configuration>
+          <url>jdbc:postgresql://localhost:5432/java_wishlist</url>
+          <user>postgres</user>
+          <password>password</password>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <properties>
     <java.version>11</java.version>
