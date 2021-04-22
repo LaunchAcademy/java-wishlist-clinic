@@ -6,4 +6,3 @@ create table products(
   price decimal NOT NULL,
   url VARCHAR(255)
 );
-

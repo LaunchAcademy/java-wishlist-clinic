@@ -5,6 +5,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Range;
+import org.hibernate.validator.constraints.URL;
 
 @Entity
 @Table(name="products")
@@ -15,14 +23,30 @@ public class Product {
   @Column(name = "id", nullable = false, unique = true)
   private Long id;
 
-  @Column(name="name", nullable = false)
+  @NotBlank
+  @Column(name="name", nullable = false, unique = true)
   private String name;
 
+  @Range(min=0, max=500)
   @Column(name = "price", nullable = false)
   private double price;
 
+  @URL(message = "You must have a URL which starts with http:// or https://")
   @Column(name="url")
   private String url;
+
+  @Email(message = "This must be a valid email address")
+  @Column(name="email")
+  private String email;
+
+  public String getEmail() {
+    return this.email;
+  }
+
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
   public Long getId() {
     return this.id;
