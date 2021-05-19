@@ -1,7 +1,7 @@
 public class WishListRunner {
 
   public static void main(String[] args) {
-    Menu mainMenu = new Menu();
+    MenuCheckDatabase mainMenu = new MenuCheckDatabase();
     mainMenu.promptUntilDone();
   }
 }

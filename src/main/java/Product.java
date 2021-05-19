@@ -5,6 +5,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import org.hibernate.validator.constraints.URL;
 
 @Entity
 @Table(name = "products")
@@ -15,12 +19,17 @@ public class Product {
   @Column(name = "id", nullable = false, unique = true)
   private long id;
 
-  @Column(name = "name", nullable = false, length = 50)
+  @Column(name = "name", nullable = false, length = 50, unique = true)
+  @NotBlank
   private String name;
 
+  @Positive(message="You must have a positive price")
+  @NotNull
   @Column(name = "price", nullable = false)
   private double price;
 
+//  @URL
+  @URL(regexp = "^(http|https).*||null", message = "Your URL must have a protocol of http or https")
   @Column(name = "url")
   private String url;
 

@@ -5,13 +5,14 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.RollbackException;
 import javax.persistence.TypedQuery;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-public class Menu {
+public class MenuHandleError {
 
   public static final String ADD_A_PRODUCT = "Add a Product";
   public static final String LIST_ALL_PRODUCTS = "Display all products";
@@ -61,7 +62,7 @@ public class Menu {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
-        Set<ConstraintViolation<Product>> violations = new HashSet<>();
+        boolean continueLoop = true;
 
         do {
           System.out.println("What is the name of the product?");
@@ -84,7 +85,7 @@ public class Menu {
           // the things that will change in the below line:
           // 1. our type of object (here, Product)
           // 2. our variable with the new object we created (here, newProduct)
-          violations = validator.validate(newProduct);
+          Set<ConstraintViolation<Product>> violations = validator.validate(newProduct);
 
           // if there are any violations
           if(violations.size() > 0) {
@@ -94,13 +95,18 @@ public class Menu {
             }
           } else {
             // save the object
-            em.getTransaction().begin();
-            em.persist(newProduct);
-            em.getTransaction().commit();
+            try {
+              em.getTransaction().begin();
+              em.persist(newProduct);
+              em.getTransaction().commit();
+              continueLoop = false;
+            } catch(RollbackException err) {
+              System.out.println(err);
+            }
           }
 
           System.out.println(newProduct.getId());
-        } while (violations.size() > 0);
+        } while (continueLoop);
       } else if (input == MenuOption.b) {
         TypedQuery<Product> query = em.createQuery("FROM Product ORDER BY LOWER(name)", Product.class);
         List<Product> products = query.getResultList();
